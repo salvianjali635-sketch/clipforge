@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="hi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ClipForge — Free AI Clip Studio</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:Inter,Arial,sans-serif;background:#080b12;color:#fff}
+.wrap{max-width:1050px;margin:auto;padding:30px 18px}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:55px}
+.logo{font-size:25px;font-weight:800}.badge{font-size:12px;padding:7px 10px;border:1px solid #303746;border-radius:999px;color:#9ee6b8}
+.hero{text-align:center}.hero h1{font-size:clamp(38px,7vw,76px);line-height:.98;margin:0 0 20px}
+.hero p{color:#aeb6c7;font-size:18px;max-width:680px;margin:0 auto 30px}
+.card{margin:35px auto;background:#111722;border:1px solid #252d3b;border-radius:24px;padding:24px;max-width:800px;box-shadow:0 20px 60px #0005}
+.drop{border:2px dashed #394354;border-radius:18px;padding:40px;text-align:center;background:#0c111a}
+input,select,button{font:inherit}input[type=file]{width:100%;margin:15px 0;color:#bbc3d2}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px}
+.field{background:#0b1018;border:1px solid #283140;border-radius:14px;padding:12px}
+.field label{display:block;color:#8e98aa;font-size:12px;margin-bottom:7px}
+.field input,.field select{width:100%;background:transparent;color:#fff;border:0;outline:0}
+button{margin-top:20px;width:100%;padding:15px;border:0;border-radius:14px;background:#fff;color:#090b10;font-weight:800;cursor:pointer}
+button:disabled{opacity:.5}.status{margin-top:18px;color:#aeb6c7;white-space:pre-wrap}
+.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:15px;margin-top:20px}
+.clip{background:#0b1018;border:1px solid #283140;border-radius:16px;padding:12px}.clip video{width:100%;aspect-ratio:9/16;background:#000;border-radius:10px}.clip a{display:block;text-align:center;margin-top:10px;color:#fff;text-decoration:none}
+.note{color:#8993a6;font-size:13px;line-height:1.5;margin-top:18px}
+@media(max-width:650px){.grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav"><div class="logo">ClipForge</div><div class="badge">NO CREDITS • LOCAL PROCESSING</div></div>
+  <section class="hero">
+    <h1>Turn long videos into Shorts.</h1>
+    <p>Upload a video and create vertical 9:16 clips in 1080p. This starter version runs on your own computer/server, so there is no per-clip credit system.</p>
+  </section>
+
+  <div class="card">
+    <form id="form">
+      <div class="drop">
+        <strong>Upload your video</strong><br>
+        <input type="file" name="video" accept="video/*" required>
+      </div>
+      <div class="grid">
+        <div class="field"><label>STYLE</label>
+          <select name="style"><option value="viral">Viral</option><option value="cinematic">Cinematic</option><option value="news">News</option><option value="bright">Bright</option></select>
+        </div>
+        <div class="field"><label>NUMBER OF CLIPS</label><input name="clips" type="number" min="1" max="10" value="3"></div>
+        <div class="field"><label>CLIP LENGTH (SECONDS)</label><input name="length" type="number" min="5" max="90" value="30"></div>
+      </div>
+      <button id="go">Generate Clips</button>
+      <div id="status" class="status"></div>
+    </form>
+    <div id="results" class="results"></div>
+    <div class="note">Important: this MVP performs local video processing. It does not bypass another website's paid features. For public deployment, add authentication, storage limits, a job queue and your own legal/licensed video sources.</div>
+  </div>
+</div>
+<script>
+const form=document.getElementById('form'), status=document.getElementById('status'), results=document.getElementById('results'), go=document.getElementById('go');
+form.addEventListener('submit',async e=>{
+ e.preventDefault(); go.disabled=true; results.innerHTML=''; status.textContent='Processing…';
+ try{
+   const r=await fetch('/api/process',{method:'POST',body:new FormData(form)});
+   const d=await r.json();
+   if(!r.ok) throw new Error(d.error||'Something went wrong');
+   status.textContent=d.message;
+   d.clips.forEach(c=>{
+     const div=document.createElement('div'); div.className='clip';
+     div.innerHTML=`<video controls playsinline src="${c.url}"></video><a href="${c.url}" download>Download 1080p</a>`;
+     results.appendChild(div);
+   });
+ }catch(err){status.textContent='Error: '+err.message}
+ finally{go.disabled=false}
+});
+</script>
+</body>
+</html>
