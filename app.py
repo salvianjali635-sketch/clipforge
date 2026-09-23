@@ -8,7 +8,7 @@ OUTPUT = os.path.join(BASE, "outputs")
 os.makedirs(UPLOAD, exist_ok=True)
 os.makedirs(OUTPUT, exist_ok=True)
 
-app = Flask(__name__)
+app = app = Flask(__name__, template_folder="templates")
 app.config["MAX_CONTENT_LENGTH"] = 2 * 1024 * 1024 * 1024
 
 ALLOWED = {"mp4", "mov", "mkv", "webm", "avi"}
