@@ -1,646 +1,263 @@
 <!DOCTYPE html>
 <html lang="hi">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-content="width=device-width, initial-scale=1.0">
-
-<title>ClipForge AI Clip Studio</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipForge - YouTube Clips</title>
 
 <style>
-
-*{
-    box-sizing:border-box;
-}
-
+*{box-sizing:border-box}
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#070a10;
-    color:#fff;
+    background:#0b0b12;
+    color:white;
 }
-
 .container{
-    max-width:1100px;
-    margin:auto;
-    padding:24px 18px 70px;
-}
-
-nav{
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    margin-bottom:70px;
-}
-
-.logo{
-    font-size:28px;
-    font-weight:800;
-}
-
-.badge{
-    padding:8px 12px;
-    border:1px solid #303746;
-    border-radius:20px;
-    font-size:12px;
-    color:#9ee6b8;
-}
-
-.hero{
-    text-align:center;
-    margin-bottom:40px;
-}
-
-.hero h1{
-    font-size:clamp(42px,8vw,78px);
-    line-height:.95;
-    margin:0 0 22px;
-}
-
-.hero p{
     max-width:700px;
     margin:auto;
-    color:#aeb6c7;
-    font-size:18px;
-    line-height:1.6;
+    padding:35px 18px;
 }
-
-.card{
-    max-width:850px;
-    margin:auto;
-    padding:25px;
-    background:#111722;
-    border:1px solid #283140;
-    border-radius:24px;
-}
-
-.tabs{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-    margin-bottom:20px;
-}
-
-.tab{
-    padding:14px;
-    border:1px solid #303746;
-    background:#0b1018;
-    color:#fff;
-    border-radius:12px;
-    cursor:pointer;
-}
-
-.tab.active{
-    background:#fff;
-    color:#080b12;
-}
-
-.panel{
-    padding:25px;
-    border:2px dashed #394354;
-    border-radius:18px;
+.logo{
     text-align:center;
-}
-
-.panel h3{
-    margin-top:0;
-}
-
-input[type=file]{
-    width:100%;
-    margin-top:15px;
-}
-
-.urlbox{
-    width:100%;
-    padding:16px;
-    border-radius:12px;
-    border:1px solid #394354;
-    background:#0b1018;
-    color:#fff;
-    outline:none;
-    margin-top:12px;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(3,1fr);
-    gap:14px;
-    margin-top:20px;
-}
-
-.field{
-    background:#0b1018;
-    border:1px solid #283140;
-    border-radius:14px;
-    padding:14px;
-}
-
-.field label{
-    display:block;
-    color:#8e98aa;
-    font-size:12px;
+    font-size:38px;
+    font-weight:800;
     margin-bottom:8px;
 }
-
-.field input,
-.field select{
-    width:100%;
-    background:#0b1018;
-    color:#fff;
-    border:0;
-    outline:0;
-    padding:5px;
-}
-
-.generate{
-    width:100%;
-    margin-top:22px;
-    padding:17px;
-    border:0;
-    border-radius:14px;
-    background:#fff;
-    color:#080b12;
-    font-size:16px;
-    font-weight:800;
-    cursor:pointer;
-}
-
-.generate:disabled{
-    opacity:.5;
-}
-
-.status{
+.subtitle{
     text-align:center;
-    margin-top:20px;
-    color:#aeb6c7;
-    white-space:pre-wrap;
+    color:#aaa;
+    margin-bottom:30px;
 }
-
-.results{
-    display:grid;
-    grid-template-columns:
-    repeat(auto-fit,minmax(220px,1fr));
-    gap:18px;
-    margin-top:25px;
+.card{
+    background:#15151f;
+    border:1px solid #292936;
+    border-radius:20px;
+    padding:22px;
 }
-
-.clip{
-    background:#0b1018;
-    border:1px solid #283140;
-    border-radius:18px;
-    padding:12px;
-}
-
-.clip video{
-    width:100%;
-    aspect-ratio:9/16;
-    object-fit:cover;
-    background:#000;
-    border-radius:12px;
-}
-
-.clip-title{
-    margin:12px 4px 4px;
+label{
+    display:block;
+    margin:15px 0 8px;
     font-weight:bold;
 }
-
+input,select{
+    width:100%;
+    padding:15px;
+    border-radius:12px;
+    border:1px solid #333;
+    background:#0d0d14;
+    color:white;
+    font-size:16px;
+}
+button{
+    width:100%;
+    margin-top:22px;
+    padding:16px;
+    border:0;
+    border-radius:12px;
+    background:#ff3158;
+    color:white;
+    font-size:17px;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:disabled{
+    opacity:.5;
+}
+#status{
+    margin-top:20px;
+    text-align:center;
+    color:#aaa;
+}
+.clip{
+    margin-top:25px;
+    padding:15px;
+    background:#11111a;
+    border-radius:15px;
+}
+video{
+    width:100%;
+    max-height:600px;
+    border-radius:12px;
+    background:black;
+}
 .download{
     display:block;
     text-align:center;
-    padding:12px;
+    text-decoration:none;
+    color:white;
+    background:#242432;
+    padding:13px;
     margin-top:10px;
     border-radius:10px;
-    background:#fff;
-    color:#080b12;
-    text-decoration:none;
-    font-weight:bold;
 }
-
-.hidden{
-    display:none;
-}
-
 .note{
-    color:#7f899a;
-    font-size:13px;
+    font-size:12px;
+    color:#777;
+    margin-top:18px;
     line-height:1.5;
-    margin-top:25px;
 }
-
-@media(max-width:700px){
-
-    .grid{
-        grid-template-columns:1fr;
-    }
-
-    nav{
-        margin-bottom:45px;
-    }
-
-}
-
 </style>
-
 </head>
 
 <body>
 
 <div class="container">
 
-<nav>
+    <div class="logo">ClipForge ✂️</div>
 
-<div class="logo">
-ClipForge
-</div>
+    <div class="subtitle">
+        YouTube video se Shorts / Reels clips
+    </div>
 
-<div class="badge">
-FREE • NO CREDITS
-</div>
+    <div class="card">
 
-</nav>
+        <label>YouTube Video Link</label>
 
+        <input
+            id="url"
+            type="url"
+            placeholder="https://www.youtube.com/watch?v=..."
+        >
 
-<section class="hero">
+        <label>Clip Style</label>
 
-<h1>
-Turn long videos<br>
-into Shorts.
-</h1>
+        <select id="style">
+            <option value="viral">Viral</option>
+            <option value="cinematic">Cinematic</option>
+            <option value="news">News</option>
+            <option value="bright">Bright</option>
+        </select>
 
-<p>
-Upload a video or provide an authorized
-video URL. Create vertical 9:16 clips
-ready for Shorts and Reels.
-</p>
+        <label>Number of Clips</label>
 
-</section>
+        <select id="clips">
+            <option value="1">1 Clip</option>
+            <option value="2">2 Clips</option>
+            <option value="3" selected>3 Clips</option>
+            <option value="4">4 Clips</option>
+            <option value="5">5 Clips</option>
+        </select>
 
+        <label>Clip Length</label>
 
-<div class="card">
+        <select id="length">
+            <option value="15">15 Seconds</option>
+            <option value="30" selected>30 Seconds</option>
+            <option value="45">45 Seconds</option>
+            <option value="60">60 Seconds</option>
+        </select>
 
+        <button id="generate" onclick="generateClips()">
+            ✂️ Generate Clips
+        </button>
 
-<div class="tabs">
+        <div id="status"></div>
 
-<button
-class="tab active"
-id="uploadTab"
-type="button">
+        <div id="results"></div>
 
-Upload Video
+        <div class="note">
+            केवल ऐसे YouTube वीडियो इस्तेमाल करें जिन्हें डाउनलोड और
+            इस्तेमाल करने की आपको अनुमति है।
+        </div>
 
-</button>
-
-<button
-class="tab"
-id="urlTab"
-type="button">
-
-Video URL
-
-</button>
-
-</div>
-
-
-<form id="form">
-
-
-<div
-id="uploadPanel"
-class="panel">
-
-<h3>
-Upload your video
-</h3>
-
-<p>
-MP4, MOV, MKV, WEBM or AVI
-</p>
-
-<input
-type="file"
-name="video"
-id="video"
-accept="video/*"
->
+    </div>
 
 </div>
-
-
-<div
-id="urlPanel"
-class="panel hidden">
-
-<h3>
-Paste video URL
-</h3>
-
-<input
-class="urlbox"
-type="url"
-name="url"
-id="url"
-placeholder="Paste an authorized video URL"
->
-
-<p class="note">
-Only process videos you have permission
-to download or use.
-</p>
-
-</div>
-
-
-<div class="grid">
-
-
-<div class="field">
-
-<label>
-STYLE
-</label>
-
-<select name="style">
-
-<option value="viral">
-Viral
-</option>
-
-<option value="cinematic">
-Cinematic
-</option>
-
-<option value="news">
-News
-</option>
-
-<option value="bright">
-Bright
-</option>
-
-</select>
-
-</div>
-
-
-<div class="field">
-
-<label>
-NUMBER OF CLIPS
-</label>
-
-<input
-name="clips"
-type="number"
-min="1"
-max="10"
-value="3"
->
-
-</div>
-
-
-<div class="field">
-
-<label>
-CLIP LENGTH
-</label>
-
-<input
-name="length"
-type="number"
-min="5"
-max="90"
-value="30"
->
-
-</div>
-
-
-</div>
-
-
-<button
-class="generate"
-id="go"
-type="submit">
-
-Generate Clips
-
-</button>
-
-
-<div
-id="status"
-class="status">
-</div>
-
-
-</form>
-
-
-<div
-id="results"
-class="results">
-</div>
-
-
-<div class="note">
-
-Current version creates clips from selected
-video positions. AI highlight detection,
-automatic captions, hooks and titles can be
-added as the next upgrade.
-
-</div>
-
-
-</div>
-
-</div>
-
 
 <script>
 
-const form =
-document.getElementById("form");
+async function generateClips(){
 
-const uploadTab =
-document.getElementById("uploadTab");
+    const url = document.getElementById("url").value.trim();
+    const style = document.getElementById("style").value;
+    const clips = document.getElementById("clips").value;
+    const length = document.getElementById("length").value;
 
-const urlTab =
-document.getElementById("urlTab");
+    const status = document.getElementById("status");
+    const results = document.getElementById("results");
+    const button = document.getElementById("generate");
 
-const uploadPanel =
-document.getElementById("uploadPanel");
+    if(!url){
+        status.innerText = "पहले YouTube link डालें।";
+        return;
+    }
 
-const urlPanel =
-document.getElementById("urlPanel");
+    button.disabled = true;
+    button.innerText = "⏳ Processing...";
+    status.innerText = "YouTube video process हो रहा है...";
+    results.innerHTML = "";
 
-const status =
-document.getElementById("status");
+    const form = new FormData();
 
-const results =
-document.getElementById("results");
+    form.append("url", url);
+    form.append("style", style);
+    form.append("clips", clips);
+    form.append("length", length);
 
-const go =
-document.getElementById("go");
+    try{
 
+        const response = await fetch("/api/process", {
+            method:"POST",
+            body:form
+        });
 
-uploadTab.onclick = function(){
+        const text = await response.text();
 
-uploadTab.classList.add("active");
+        let data;
 
-urlTab.classList.remove("active");
+        try{
+            data = JSON.parse(text);
+        }catch(e){
+            throw new Error(
+                "Server ने valid JSON response नहीं दिया। Render Logs check करें।"
+            );
+        }
 
-uploadPanel.classList.remove("hidden");
+        if(!response.ok || !data.success){
+            throw new Error(data.error || "Processing failed.");
+        }
 
-urlPanel.classList.add("hidden");
+        status.innerText = data.message;
 
-};
+        data.clips.forEach((clip, index) => {
 
+            const div = document.createElement("div");
+            div.className = "clip";
 
-urlTab.onclick = function(){
+            div.innerHTML = `
+                <h3>Clip ${index + 1}</h3>
 
-urlTab.classList.add("active");
+                <video
+                    controls
+                    playsinline
+                    src="${clip.url}">
+                </video>
 
-uploadTab.classList.remove("active");
+                <a
+                    class="download"
+                    href="${clip.url}"
+                    download>
+                    ⬇️ Download Clip
+                </a>
+            `;
 
-urlPanel.classList.remove("hidden");
+            results.appendChild(div);
+        });
 
-uploadPanel.classList.add("hidden");
+    }catch(error){
 
-};
+        status.innerText = "Error: " + error.message;
 
+    }finally{
 
-form.addEventListener(
-"submit",
-async function(e){
+        button.disabled = false;
+        button.innerText = "✂️ Generate Clips";
 
-e.preventDefault();
-
-go.disabled=true;
-
-results.innerHTML="";
-
-status.textContent=
-"Processing video...\nPlease wait.";
-
-
-try{
-
-const response =
-await fetch(
-"/api/process",
-{
-method:"POST",
-body:new FormData(form)
+    }
 }
-);
-
-
-const text =
-await response.text();
-
-
-let data;
-
-try{
-
-data=JSON.parse(text);
-
-}
-catch{
-
-throw new Error(
-"Server ने valid response नहीं दिया. Render Logs check करें."
-);
-
-}
-
-
-if(!response.ok){
-
-throw new Error(
-data.error ||
-"Video processing failed."
-);
-
-}
-
-
-status.textContent =
-data.message;
-
-
-data.clips.forEach(
-function(clip,index){
-
-const div =
-document.createElement("div");
-
-div.className="clip";
-
-
-div.innerHTML=`
-
-<video
-controls
-playsinline
-src="${clip.url}">
-</video>
-
-<div class="clip-title">
-Clip ${index+1}
-</div>
-
-<div class="note">
-Start: ${clip.start}s
-<br>
-Duration: ${clip.duration}s
-</div>
-
-<a
-class="download"
-href="${clip.url}"
-download>
-
-Download 1080p
-
-</a>
-
-`;
-
-
-results.appendChild(div);
-
-});
-
-}
-
-
-catch(error){
-
-status.textContent =
-"Error: " + error.message;
-
-}
-
-
-finally{
-
-go.disabled=false;
-
-}
-
-});
 
 </script>
 
 </body>
-
 </html>
