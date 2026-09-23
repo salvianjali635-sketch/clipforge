@@ -3,43 +3,49 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ClipForge - YouTube Clips</title>
+<title>ClipForge - AI Shorts</title>
 
 <style>
 *{box-sizing:border-box}
+
 body{
     margin:0;
     font-family:Arial,sans-serif;
-    background:#0b0b12;
-    color:white;
+    background:#09090f;
+    color:#fff;
 }
+
 .container{
     max-width:700px;
     margin:auto;
-    padding:35px 18px;
+    padding:30px 18px;
 }
+
 .logo{
     text-align:center;
-    font-size:38px;
+    font-size:40px;
     font-weight:800;
-    margin-bottom:8px;
 }
+
 .subtitle{
     text-align:center;
-    color:#aaa;
-    margin-bottom:30px;
+    color:#999;
+    margin:8px 0 28px;
 }
+
 .card{
     background:#15151f;
     border:1px solid #292936;
     border-radius:20px;
     padding:22px;
 }
+
 label{
     display:block;
-    margin:15px 0 8px;
+    margin:18px 0 8px;
     font-weight:bold;
 }
+
 input,select{
     width:100%;
     padding:15px;
@@ -49,9 +55,10 @@ input,select{
     color:white;
     font-size:16px;
 }
+
 button{
     width:100%;
-    margin-top:22px;
+    margin-top:24px;
     padding:16px;
     border:0;
     border-radius:12px;
@@ -59,43 +66,47 @@ button{
     color:white;
     font-size:17px;
     font-weight:bold;
-    cursor:pointer;
 }
+
 button:disabled{
     opacity:.5;
 }
+
 #status{
-    margin-top:20px;
     text-align:center;
+    margin-top:20px;
     color:#aaa;
 }
+
 .clip{
     margin-top:25px;
     padding:15px;
-    background:#11111a;
+    background:#101018;
     border-radius:15px;
 }
+
 video{
     width:100%;
-    max-height:600px;
     border-radius:12px;
-    background:black;
+    background:#000;
 }
+
 .download{
     display:block;
     text-align:center;
     text-decoration:none;
-    color:white;
-    background:#242432;
+    color:#fff;
+    background:#252535;
     padding:13px;
     margin-top:10px;
     border-radius:10px;
 }
-.note{
-    font-size:12px;
+
+.info{
     color:#777;
-    margin-top:18px;
+    font-size:12px;
     line-height:1.5;
+    margin-top:18px;
 }
 </style>
 </head>
@@ -107,39 +118,30 @@ video{
     <div class="logo">ClipForge ✂️</div>
 
     <div class="subtitle">
-        YouTube video se Shorts / Reels clips
+        Turn your videos into Shorts
     </div>
 
     <div class="card">
 
-        <label>YouTube Video Link</label>
+        <label>Video Upload</label>
 
         <input
-            id="url"
-            type="url"
-            placeholder="https://www.youtube.com/watch?v=..."
+            id="video"
+            type="file"
+            accept="video/*"
         >
 
-        <label>Clip Style</label>
-
-        <select id="style">
-            <option value="viral">Viral</option>
-            <option value="cinematic">Cinematic</option>
-            <option value="news">News</option>
-            <option value="bright">Bright</option>
-        </select>
-
-        <label>Number of Clips</label>
+        <label>Number of Shorts</label>
 
         <select id="clips">
-            <option value="1">1 Clip</option>
-            <option value="2">2 Clips</option>
-            <option value="3" selected>3 Clips</option>
-            <option value="4">4 Clips</option>
-            <option value="5">5 Clips</option>
+            <option value="1">1 Short</option>
+            <option value="2">2 Shorts</option>
+            <option value="3" selected>3 Shorts</option>
+            <option value="4">4 Shorts</option>
+            <option value="5">5 Shorts</option>
         </select>
 
-        <label>Clip Length</label>
+        <label>Short Length</label>
 
         <select id="length">
             <option value="15">15 Seconds</option>
@@ -148,17 +150,29 @@ video{
             <option value="60">60 Seconds</option>
         </select>
 
-        <button id="generate" onclick="generateClips()">
-            ✂️ Generate Clips
+        <label>Style</label>
+
+        <select id="style">
+            <option value="viral">Viral</option>
+            <option value="cinematic">Cinematic</option>
+            <option value="news">News</option>
+            <option value="bright">Bright</option>
+        </select>
+
+        <button
+            id="generate"
+            onclick="generateClips()">
+            ✂️ Generate Shorts
         </button>
 
         <div id="status"></div>
 
         <div id="results"></div>
 
-        <div class="note">
-            केवल ऐसे YouTube वीडियो इस्तेमाल करें जिन्हें डाउनलोड और
-            इस्तेमाल करने की आपको अनुमति है।
+        <div class="info">
+            अभी यह version video को 9:16 Shorts में convert करता है।
+            Auto captions और AI highlight selection अगला backend upgrade है।
+            केवल उन्हीं videos का इस्तेमाल करें जिनके उपयोग की आपको अनुमति है।
         </div>
 
     </div>
@@ -169,91 +183,158 @@ video{
 
 async function generateClips(){
 
-    const url = document.getElementById("url").value.trim();
-    const style = document.getElementById("style").value;
-    const clips = document.getElementById("clips").value;
-    const length = document.getElementById("length").value;
+    const video =
+        document.getElementById("video").files[0];
 
-    const status = document.getElementById("status");
-    const results = document.getElementById("results");
-    const button = document.getElementById("generate");
+    const clips =
+        document.getElementById("clips").value;
 
-    if(!url){
-        status.innerText = "पहले YouTube link डालें।";
+    const length =
+        document.getElementById("length").value;
+
+    const style =
+        document.getElementById("style").value;
+
+    const status =
+        document.getElementById("status");
+
+    const results =
+        document.getElementById("results");
+
+    const button =
+        document.getElementById("generate");
+
+    if(!video){
+
+        status.innerText =
+            "पहले video select करें।";
+
         return;
     }
 
     button.disabled = true;
-    button.innerText = "⏳ Processing...";
-    status.innerText = "YouTube video process हो रहा है...";
+
+    button.innerText =
+        "⏳ Processing...";
+
+    status.innerText =
+        "Shorts बन रहे हैं...";
+
     results.innerHTML = "";
 
-    const form = new FormData();
+    const form =
+        new FormData();
 
-    form.append("url", url);
-    form.append("style", style);
-    form.append("clips", clips);
-    form.append("length", length);
+    form.append(
+        "video",
+        video
+    );
+
+    form.append(
+        "clips",
+        clips
+    );
+
+    form.append(
+        "length",
+        length
+    );
+
+    form.append(
+        "style",
+        style
+    );
 
     try{
 
-        const response = await fetch("/api/process", {
-            method:"POST",
-            body:form
-        });
+        const response =
+            await fetch(
+                "/api/process",
+                {
+                    method:"POST",
+                    body:form
+                }
+            );
 
-        const text = await response.text();
+        const text =
+            await response.text();
 
         let data;
 
         try{
-            data = JSON.parse(text);
+
+            data =
+                JSON.parse(text);
+
         }catch(e){
+
             throw new Error(
-                "Server ने valid JSON response नहीं दिया। Render Logs check करें।"
+                "Server ने valid response नहीं दिया।"
             );
         }
 
-        if(!response.ok || !data.success){
-            throw new Error(data.error || "Processing failed.");
+        if(
+            !response.ok ||
+            !data.success
+        ){
+
+            throw new Error(
+                data.error ||
+                "Processing failed."
+            );
         }
 
-        status.innerText = data.message;
+        status.innerText =
+            data.message;
 
-        data.clips.forEach((clip, index) => {
+        data.clips.forEach(
+            (clip,index)=>{
 
-            const div = document.createElement("div");
-            div.className = "clip";
+                const box =
+                    document.createElement(
+                        "div"
+                    );
 
-            div.innerHTML = `
-                <h3>Clip ${index + 1}</h3>
+                box.className =
+                    "clip";
 
-                <video
-                    controls
-                    playsinline
-                    src="${clip.url}">
-                </video>
+                box.innerHTML = `
+                    <h3>
+                        Short ${index+1}
+                    </h3>
 
-                <a
-                    class="download"
-                    href="${clip.url}"
-                    download>
-                    ⬇️ Download Clip
-                </a>
-            `;
+                    <video
+                        controls
+                        playsinline
+                        src="${clip.url}">
+                    </video>
 
-            results.appendChild(div);
-        });
+                    <a
+                        class="download"
+                        href="${clip.url}"
+                        download>
+                        ⬇️ Download Short
+                    </a>
+                `;
+
+                results.appendChild(box);
+
+            }
+        );
 
     }catch(error){
 
-        status.innerText = "Error: " + error.message;
+        status.innerText =
+            "Error: " +
+            error.message;
 
     }finally{
 
-        button.disabled = false;
-        button.innerText = "✂️ Generate Clips";
+        button.disabled =
+            false;
 
+        button.innerText =
+            "✂️ Generate Shorts";
     }
 }
 
