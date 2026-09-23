@@ -1,1 +1,356 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClipForge - AI Clip Studio</title>
 
+<style>
+*{box-sizing:border-box}
+
+body{
+    margin:0;
+    font-family:Arial,sans-serif;
+    background:#080b12;
+    color:white;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+    padding:25px 18px;
+}
+
+nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-bottom:70px;
+}
+
+.logo{
+    font-size:26px;
+    font-weight:bold;
+}
+
+.badge{
+    border:1px solid #333;
+    padding:8px 12px;
+    border-radius:20px;
+    font-size:12px;
+    color:#9ee6b8;
+}
+
+.hero{
+    text-align:center;
+}
+
+.hero h1{
+    font-size:clamp(40px,8vw,75px);
+    margin:0 0 20px;
+}
+
+.hero p{
+    color:#aeb6c7;
+    font-size:18px;
+    max-width:650px;
+    margin:auto;
+    line-height:1.5;
+}
+
+.card{
+    max-width:800px;
+    margin:40px auto;
+    background:#111722;
+    border:1px solid #283140;
+    border-radius:24px;
+    padding:25px;
+}
+
+.upload{
+    border:2px dashed #394354;
+    border-radius:18px;
+    padding:40px 20px;
+    text-align:center;
+}
+
+input[type=file]{
+    width:100%;
+    margin-top:20px;
+}
+
+.grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:20px;
+}
+
+.field{
+    background:#0b1018;
+    border:1px solid #283140;
+    border-radius:14px;
+    padding:14px;
+}
+
+label{
+    display:block;
+    color:#8e98aa;
+    font-size:12px;
+    margin-bottom:8px;
+}
+
+input,select{
+    width:100%;
+    background:#0b1018;
+    color:white;
+    border:0;
+    outline:0;
+    padding:5px;
+}
+
+button{
+    width:100%;
+    margin-top:20px;
+    padding:16px;
+    border:0;
+    border-radius:14px;
+    background:white;
+    color:#080b12;
+    font-weight:bold;
+    font-size:16px;
+    cursor:pointer;
+}
+
+button:disabled{
+    opacity:.5;
+}
+
+.status{
+    margin-top:20px;
+    color:#aeb6c7;
+    text-align:center;
+}
+
+.results{
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+    gap:15px;
+    margin-top:25px;
+}
+
+.clip{
+    background:#0b1018;
+    border:1px solid #283140;
+    border-radius:16px;
+    padding:12px;
+}
+
+.clip video{
+    width:100%;
+    aspect-ratio:9/16;
+    background:#000;
+    border-radius:10px;
+}
+
+.clip a{
+    display:block;
+    text-align:center;
+    margin-top:12px;
+    color:white;
+    text-decoration:none;
+}
+
+@media(max-width:650px){
+    .grid{
+        grid-template-columns:1fr;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<nav>
+    <div class="logo">ClipForge</div>
+    <div class="badge">FREE • NO CREDITS</div>
+</nav>
+
+<section class="hero">
+
+<h1>Turn long videos into Shorts.</h1>
+
+<p>
+Upload your video and create vertical 9:16 clips.
+Generate multiple Shorts from one video.
+</p>
+
+</section>
+
+<div class="card">
+
+<form id="form">
+
+<div class="upload">
+
+<strong>Upload your video</strong>
+
+<br><br>
+
+<input
+type="file"
+name="video"
+accept="video/*"
+required
+>
+
+</div>
+
+<div class="grid">
+
+<div class="field">
+
+<label>STYLE</label>
+
+<select name="style">
+
+<option value="viral">Viral</option>
+<option value="cinematic">Cinematic</option>
+<option value="news">News</option>
+<option value="bright">Bright</option>
+
+</select>
+
+</div>
+
+<div class="field">
+
+<label>NUMBER OF CLIPS</label>
+
+<input
+name="clips"
+type="number"
+min="1"
+max="10"
+value="3"
+>
+
+</div>
+
+<div class="field">
+
+<label>CLIP LENGTH (SECONDS)</label>
+
+<input
+name="length"
+type="number"
+min="5"
+max="90"
+value="30"
+>
+
+</div>
+
+</div>
+
+<button id="go">
+Generate Clips
+</button>
+
+<div id="status" class="status"></div>
+
+</form>
+
+<div id="results" class="results"></div>
+
+</div>
+
+</div>
+
+<script>
+
+const form=document.getElementById("form");
+const status=document.getElementById("status");
+const results=document.getElementById("results");
+const go=document.getElementById("go");
+
+form.addEventListener("submit",async function(e){
+
+e.preventDefault();
+
+go.disabled=true;
+
+results.innerHTML="";
+
+status.textContent="Processing video...";
+
+try{
+
+const response=await fetch(
+"/api/process",
+{
+method:"POST",
+body:new FormData(form)
+}
+);
+
+const data=await response.json();
+
+if(!response.ok){
+
+throw new Error(
+data.error || "Something went wrong"
+);
+
+}
+
+status.textContent=data.message;
+
+data.clips.forEach(function(clip){
+
+const div=document.createElement("div");
+
+div.className="clip";
+
+div.innerHTML=`
+
+<video
+controls
+playsinline
+src="${clip.url}">
+</video>
+
+<a
+href="${clip.url}"
+download>
+Download 1080p
+</a>
+
+`;
+
+results.appendChild(div);
+
+});
+
+}
+
+catch(error){
+
+status.textContent="Error: "+error.message;
+
+}
+
+finally{
+
+go.disabled=false;
+
+}
+
+});
+
+</script>
+
+</body>
+</html>
